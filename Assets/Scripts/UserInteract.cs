@@ -39,11 +39,11 @@ public class UserInteract : MonoBehaviour
         }
         else if (Input.GetKey("q"))
         {
-            GetComponent<Camera>().orthographicSize = GetComponent<Camera>().orthographicSize - 1;
+            GetComponent<Camera>().orthographicSize = GetComponent<Camera>().orthographicSize - 5;
         }
         else if (Input.GetKey("e"))
         {
-            GetComponent<Camera>().orthographicSize = GetComponent<Camera>().orthographicSize + 1;
+            GetComponent<Camera>().orthographicSize = GetComponent<Camera>().orthographicSize + 5;
         }
         else if (Input.GetKeyDown("space"))
         {
