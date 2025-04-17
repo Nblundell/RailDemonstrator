@@ -34,45 +34,59 @@ public class Movement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        //This determines the delay on the trains
         float delay = UnityEngine.Random.Range(1 , 10);
         System.Random rand = new System.Random();
         float ranFloat = (float)rand.NextDouble();
+
+        //sets trains tag to broken so it doesnt interact with stations until it starts moving
         this.transform.tag = "Broken";
+        //sets next loc to 0 as the is where the train will start its route
         nextLoc = 0;
+        //sets current loc to start location
         currentLoc = route[nextLoc].gameObject;
+        //moves the train to its start location
         transform.Translate(route[nextLoc].transform.position.x, route[nextLoc].transform.position.y, 0);
+        //sets the size of the passenger array based on the trains capacity
         passengers = new GameObject[Capacity];
+        //calls the function after the delay begin funtion that starts the trains journey
         InvokeRepeating("begin", delay, 0f);
     }
     void begin()
     {
+        // starts the train in the station it located at
+        //this is so it picks up passangers at journey begining
         enterStation(currentLoc);
+        //sets tag to empty so it can interact with what it colides with
         this.transform.tag = "Empty";
+        //stops this funtion after it has run once
         CancelInvoke();
     }
     void OnTriggerEnter2D(Collider2D col)
     {
-        
+        // checks if the train is able to interact with stations
         if (this.transform.tag != "Broken")
         {
-           
+           //checks if the collided object is a station
             if (col.transform.parent.name == "Stations")
             {
                 GameObject temp = col.gameObject;
                 enterStation(temp);
             }
+            //checks if the collided object is a switch
             else if (col.transform.parent.name == "Switches")
             {
                 GameObject temp = col.gameObject;
                 onSwitch(temp);
             }
+            //checks if the train has crash with another train
             else if (this.transform.tag != "Broken"&& col.transform.parent.name == "Trains" && currentLoc.transform.parent.name == "Tracks" && (col.GetComponent<Movement>().getCurrentloc()).gameObject.transform.parent.name == "Tracks")
             {
                 
                 Debug.Log(message: $"Crashed: {transform.name}");
                 this.transform.tag = "Broken";
                 stuck = true;
+                //rotates the train so it looks crashed
                 this.transform.Rotate(0, 0, 30);
                 currentLoc.GetComponent<Track>().breakTrack();
                 Debug.Log(numOfPassengers);
@@ -207,7 +221,7 @@ public class Movement : MonoBehaviour
         }
         
     }
-
+    //used if there is an error in the trains start
     void startUp(GameObject[] signals)
     {
         bool found = false;
@@ -247,13 +261,16 @@ public class Movement : MonoBehaviour
             stuck = true;
         }
     }
-
+    //used to search for a track for the train to use
     private void LookForTrack(GameObject[] signals)
     {
+        //local variable for when a suitable
         bool found = false;
         try
         {
+            //creates a loacl array for the stations
             GameObject[] Links = null;
+            //creates local variable for the track
             GameObject track;
             foreach (GameObject signal in signals)
             {
@@ -262,6 +279,7 @@ public class Movement : MonoBehaviour
                 {
                     foreach (GameObject link in Links)
                     {
+                        // creates a array for the signals in the 
                         GameObject[] sigs;
                         if (link.transform.parent.name == "Switches")
                         {
