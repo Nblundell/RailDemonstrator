@@ -12,12 +12,9 @@ public class People : MonoBehaviour
     public void newPass (GameObject [] StationsLeft)
     {
         // find station to travel to
-        int station = UnityEngine.Random.Range(0, StationsLeft.Length );
-      
-        if(station == StationsLeft.Length)
-        {
-            station -= 1;
-        }
+        int station = UnityEngine.Random.Range(0, StationsLeft.Length - 1);
+        // if 
+        
         Dest = StationsLeft[station];
 
         int temp = 5 + (station + 1) * 4;

@@ -13,11 +13,10 @@ public class Movement : MonoBehaviour
     [SerializeField] public int speed;
     //incrmentation of the route list
     [SerializeField] int nextLoc;
-    //the direction of the route the train is traving 1 = to 2 = from
+    //the direction of the route the train is traving 1 = to -1 = from
     private int direction = 1;
     //if the train was unable to find a track
     private bool stuck = false;
-    
     //if the train has moved
     private int moved = 0;
     //the current infustruture the train is using
@@ -472,11 +471,6 @@ public class Movement : MonoBehaviour
         stuck = false;
     }
   
-    IEnumerator Wait()
-    {
-        yield return new WaitForSeconds(3);
-    }
-
     void Move()
     {
         transform.position = Vector2.MoveTowards(transform.position, nextPostion, speed * Time.deltaTime);

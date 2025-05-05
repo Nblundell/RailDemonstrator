@@ -56,13 +56,7 @@ public class Station : MonoBehaviour
             }
         }
         Trains = temp;
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    
+    }    
     public GameObject[] getTrains()
     {
         return Trains;

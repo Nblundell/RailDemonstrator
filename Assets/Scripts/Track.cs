@@ -13,19 +13,6 @@ public class Track : MonoBehaviour
         transform.tag = "Empty";
         //InvokeRepeating("updateTrack", 0.3f, 0.3f);
     }
-    void updateTrack()
-    {
-        int count = 0;
-        foreach (GameObject train in Trains)
-        {
-            if (train.gameObject.transform.name != null)
-            {
-                count += 1;
-            }
-          
-        }
-        numberOfTrains = count;
-    }
     public int TrainOn(GameObject train)
     {
         if (transform.tag != "Broken")

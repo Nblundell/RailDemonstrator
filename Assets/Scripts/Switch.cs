@@ -36,7 +36,7 @@ public class Switch : MonoBehaviour
     {
         return signals;
     }
-     public bool switchCheck(GameObject currentLoc, GameObject nextTrack, GameObject Train)
+    public bool switchCheck(GameObject currentLoc, GameObject nextTrack, GameObject Train)
      {
         if (switchType == "dual")
         {
@@ -117,9 +117,6 @@ public class Switch : MonoBehaviour
         return linksStations;
     }
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+ 
 }
 

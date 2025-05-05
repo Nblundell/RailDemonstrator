@@ -9,10 +9,7 @@ public class UserInteract : MonoBehaviour
     //[SerializeField] GameObject[] Tracks;
     //[SerializeField] GameObject[] Tracks;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
 
-    }
     public void resetScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

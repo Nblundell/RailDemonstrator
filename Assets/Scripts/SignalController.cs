@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class SignalController : MonoBehaviour
 {
     [SerializeField] GameObject[] signals;
-    //private GameObject[] Trains;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -15,20 +15,6 @@ public class SignalController : MonoBehaviour
             signal.gameObject.GetComponent<Signals>().setDirection(directionCal(this.gameObject, signal.gameObject));
         }
         InvokeRepeating("updateSignal", 0.3f, 0.3f);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //StartCoroutine(Wait());
-        //foreach (GameObject signal in signals)
-        //{
-            //signalStatus(signal);
-        //}
-    }
-    IEnumerator Wait()
-    {
-        yield return new WaitForSeconds(1);
     }
     void updateSignal()
     {

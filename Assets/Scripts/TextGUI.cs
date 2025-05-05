@@ -38,10 +38,7 @@ public class TextGUI : MonoBehaviour
             lostMoneyCounter.GetComponent<TMP_Text>().text = "£" + lostMoney.ToString();
         }
     }
-    public void addMoney(double moneyLost)
-    {
-        money = money + moneyLost;
-    }
+    
     public void crash(int people)
     {
         Debug.Log(people);
@@ -51,10 +48,5 @@ public class TextGUI : MonoBehaviour
         addLostMoney(temp);
     }
     // Update is called once per frame
-    void Update()
-    {
-        
-       
-        //MoneyCounter.GetComponent<TMP_Text>().text = money.ToString();
-    }
+
 }
