@@ -11,6 +11,7 @@ public class TextGUI : MonoBehaviour
     private double money = 0;
     private int peopleInjured = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    //handles text ui based on money
     void Start()
     {
         fareMoneyCounter.GetComponent<TMP_Text>().text = "£0";
@@ -19,11 +20,13 @@ public class TextGUI : MonoBehaviour
     }
     public void addLostFareMoney(double moneyLost)
     {
+        //adds money
         farelostMoney = farelostMoney + moneyLost;
         fareMoneyCounter.GetComponent<TMP_Text>().text = "£" + farelostMoney.ToString();
     }
     public void addLostMoney(double moneyLost)
     {
+       
         lostMoney = lostMoney + moneyLost;
         if (lostMoney > 1000 && lostMoney < 1000000)
         {

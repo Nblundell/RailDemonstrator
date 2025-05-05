@@ -62,11 +62,9 @@ public class Movement : MonoBehaviour
         CancelInvoke();
     }
     void OnTriggerEnter2D(Collider2D col)
-    {
-        // checks if the train is able to interact with stations
+    {   // checks if the train is able to interact with stations
         if (this.transform.tag != "Broken")
-        {
-           //checks if the collided object is a station
+        {   //checks if the collided object is a station
             if (col.transform.parent.name == "Stations")
             {
                 GameObject temp = col.gameObject;
@@ -80,19 +78,16 @@ public class Movement : MonoBehaviour
             }
             //checks if the train has crash with another train
             else if (this.transform.tag != "Broken"&& col.transform.parent.name == "Trains" && currentLoc.transform.parent.name == "Tracks" && (col.GetComponent<Movement>().getCurrentloc()).gameObject.transform.parent.name == "Tracks")
-            {
-                
-                Debug.Log(message: $"Crashed: {transform.name}");
-                this.transform.tag = "Broken";
+            {  this.transform.tag = "Broken";
+                //stuck set to true to prevent any train movement
                 stuck = true;
                 //rotates the train so it looks crashed
                 this.transform.Rotate(0, 0, 30);
+                //sets the track to broken which 
                 currentLoc.GetComponent<Track>().breakTrack();
                 Debug.Log(numOfPassengers);
                 UserInterface.GetComponent<TextGUI>().crash(numOfPassengers);
                 nextPostion = new Vector2(transform.position.x, transform.position.y);
-                
-                
             }
         }
         else
@@ -104,15 +99,18 @@ public class Movement : MonoBehaviour
     {
         bool found = false;
         GameObject[] signals = aSwitch.GetComponent<Switch>().getSignals();
+        //check the signals of the switch
         foreach (GameObject signal in signals)
         {
 
             if (found)
             {
+                //exit the loop
                 break;
             }
             GameObject track = signal.GetComponent<Signals>().getTrack();
             GameObject[] Links = track.GetComponent<Track>().getLinks();
+            //loop through the links of the tracks
             foreach (GameObject link in Links)
             {
 
@@ -121,15 +119,16 @@ public class Movement : MonoBehaviour
                     //switch check
                     if (aSwitch.GetComponent<Switch>().switchCheck(currentLoc, track, this.gameObject))
                     {
-                        
+                        //correct track is found
+                        //work out next loc
                         calNextPos(route[nextLoc], track);
                         TrackChange(track);
                         found = true;
-                        
                         break;
                     }
                     
                 }
+                //checks the link if it is a switch but not if it is the current switch
                 else if (link.transform.parent.name == "Switches" && link != aSwitch)
                 {
                     
@@ -140,12 +139,10 @@ public class Movement : MonoBehaviour
                             GameObject[] switchLinks = link.GetComponent<Switch>().getLinks();
                             foreach (GameObject Station in switchLinks)
                             {
-
+                                //checks if the signal is green and is going in the correct direction
                                 if (signal.GetComponent<Signals>().getColour() == "Green" && Station.transform.name == route[nextLoc].transform.name && loc != this.getPreviousStation())
-                                {
-                                   
+                                {    
                                     calNextPos(loc, track);
-
                                     TrackChange(track);
                                     found = true;
                                     break;
@@ -153,15 +150,13 @@ public class Movement : MonoBehaviour
                             }
                         }
                     }
-
-                       
                     break;
                 }
-
             }
         }
         if (found == false)
         {
+            //not route was found
             waitingForSwitch = aSwitch;
             stuck = true;
         }
@@ -173,7 +168,7 @@ public class Movement : MonoBehaviour
 
     void calNextPos(GameObject newPos, GameObject track)
     {
-        
+        //cals the differnce of next loc and current loc
         float diffX = newPos.transform.position.x - this.transform.position.x;
         float diffY = newPos.transform.position.y- this.transform.position.y;
         if (diffX <= 0)
@@ -237,7 +232,7 @@ public class Movement : MonoBehaviour
                 GameObject[] Links = track.GetComponent<Track>().getLinks();
                 foreach (GameObject link in Links)
                 {
-                    
+                    //check the track at the start
                     if (signal.GetComponent<Signals>().getColour() == "Green" && link.transform.name == route[nextLoc].transform.name)
                     {
                         calNextPos(route[nextLoc], track);
@@ -271,11 +266,13 @@ public class Movement : MonoBehaviour
             GameObject[] Links = null;
             //creates local variable for the track
             GameObject track;
+            //looks at the signals
             foreach (GameObject signal in signals)
             {
 
                 if (found)
                 {
+                    //looks for the link of each track
                     foreach (GameObject link in Links)
                     {
                         // creates a array for the signals in the 
@@ -295,13 +292,15 @@ public class Movement : MonoBehaviour
                     }
                     break;
                 }
+                //gets the track for the signal
                 track = signal.GetComponent<Signals>().getTrack();
+                //gets the linnks for the tracks
                 Links = track.GetComponent<Track>().getLinks();
 
                 foreach (GameObject link in Links)
                 {
 
-
+                    //check all conditions for the movement of the track
                     if (signal.GetComponent<Signals>().getColour() == "Green" && link.transform.name == route[nextLoc].transform.name)
                     {
                         calNextPos(route[nextLoc], track);
@@ -310,6 +309,7 @@ public class Movement : MonoBehaviour
                         found = true;
                         break;
                     }
+                    //differnt check if on a switch or link is a switch
                     else if(link.transform.parent.name == "Switches")
                     {
                         
@@ -350,8 +350,7 @@ public class Movement : MonoBehaviour
 
     private IEnumerator InStation()
     {
-        //adds and remove people
-        
+        //cals the next location the train is traveling to
         if (direction == 1)
         {
             nextLoc += 1;
@@ -370,19 +369,22 @@ public class Movement : MonoBehaviour
             direction = 1;
             nextLoc = 1;
         }
+        //as long as the train is broke it will wait
         if (transform.tag != "Broken")
         {
             yield return new WaitForSeconds(2);
         }
+        //as long as the train isnt stuck the passengers board
         if (!stuck)
         {
-            int count = 0;
 
+            int count = 0;
             GameObject[] newPassangers = new GameObject[Capacity];
             foreach (GameObject passenger in passengers)
             {
                 if (passenger != null)
                 {
+                    //checks for passengers leaving the trian
                     if (!passenger.GetComponent<People>().checkEndJourney(currentLoc))
                     {
                         newPassangers[count] = passenger;
@@ -390,7 +392,7 @@ public class Movement : MonoBehaviour
                     }
                     else
                     {
-
+                        //reduces passengers for each one leaving
                         numOfPassengers -= 1;
                     }
                 }
@@ -398,11 +400,9 @@ public class Movement : MonoBehaviour
             passengers = newPassangers;
             if (numOfPassengers != Capacity)
             {
-               
+               //adds new passenger (max) up to capacity
                 GameObject[] nextStations = stationsLeft();
-                
                 int newPass = UnityEngine.Random.Range(0, Capacity - numOfPassengers);
-              
                 for (int i = 0; i < newPass; i++)
                 {
                    
@@ -415,19 +415,17 @@ public class Movement : MonoBehaviour
         }
         try
         {
+            //looks for the track to the next loc
             LookForTrack(currentLoc.GetComponent<Station>().getSignals());
         }
         catch
         {
-           
             stuck = true;
         }
     }
 
     void enterStation(GameObject station)
     {
-        
-
         if (currentLoc.transform.parent.name == "Stations")
         {
             //currentLoc.gameObject.GetComponent<Station>().trainLeaving(this.gameObject);
@@ -436,20 +434,28 @@ public class Movement : MonoBehaviour
         }
         else if (station.GetComponent<Station>().trainArriving(this.gameObject) && currentLoc.transform.parent.name != "Stations")
         {
+            //train is moving
             stuck = false;
+            //removes the train from the track
             currentLoc.GetComponent<Track>().TrainOff(this.gameObject);
+            //updates loc
             currentLoc = station;
+            //starts in station wait
             StartCoroutine(InStation());
         }
         else
         {
+            //train is stuck
             stuck = true;
         }
     }
     void TrackChange (GameObject newTrack)
     {
+        //removes teh train for the track
         currentLoc.GetComponent<Track>().TrainOff(this.gameObject);
+        //updates current loc
         currentLoc = newTrack;
+        //updates speed
         speed = currentLoc.GetComponent<Track>().TrainOn(this.gameObject);
         stuck = false;
     }
@@ -465,78 +471,84 @@ public class Movement : MonoBehaviour
                 stay = false;
             }
         }
+        //tells the station the train has left
         currentLoc.GetComponent<Station>().trainLeaving(this.gameObject);
+        //updates  the location
         currentLoc = newTrack;
+        //updates the trains speed based on the track
         speed = currentLoc.GetComponent<Track>().TrainOn(this.gameObject);
         stuck = false;
     }
   
     void Move()
     {
+        //moves the train
         transform.position = Vector2.MoveTowards(transform.position, nextPostion, speed * Time.deltaTime);
     }
 
     void Lost()
     {
+
+        //looks for a route for the train
         if (!stuck)
         {
+            //cancels this invoke if train isnt stuck
             CancelInvoke();
             firstCall = true;
         }
         else
         {
-            
             for (int i = 0; i < numOfPassengers; i++)
             {
+                //adds to passenger delay
                 passengers[i].GetComponent<People>().Delayed(1);
             }
-            
             if (currentLoc.transform.parent.name == "Stations")
             {
-          
+                //looks for a track if at a station
                 LookForTrack(currentLoc.GetComponent<Station>().getSignals());
             }
             else if (currentLoc.transform.parent.name == "Tracks")
             {
+               
                 if(waitingForSwitch != null)
                 {
+                    //waits to use a switch if stuck at a switch
                     onSwitch(waitingForSwitch);
                 }
                 else
                 {
+                    //attempts to enter a station if waiting for a station to empty
                     enterStation(route[nextLoc]);
-                }
-                
+                } 
             }
-            
         }
         
     }
-
     void Update()
     {
-        
-        
+        //checks each frame and only moves the train if it is not stuck
         if (!stuck && this.transform.tag != "Broken")
         {
             Move();
             CancelInvoke();
             firstCall = true;
         }
-
+        //the train is stuck will start an invoke searching for a route
         if(stuck && moved != 0 && firstCall && this.transform.tag != "Broken")
         {
             InvokeRepeating("Lost", 2.0f, 1);
             firstCall = false;
         }
+        //prevents train braking at the start  of the demo
         if (stuck && moved == 0 && this.transform.tag != "Broken")
         {
             startUp(currentLoc.GetComponent<Station>().getSignals());
         }
     }
-
     public GameObject getNextStation()
     {
+        //retunrs the next station
         return route[nextLoc];
     }
     public GameObject[] stationsLeft()
@@ -548,7 +560,8 @@ public class Movement : MonoBehaviour
         GameObject[] tempList = new GameObject[route.Length];
         while (loop)
         {
-           
+            //checks the station is in the correct direction
+            //then adds it to the temp list
             if (temp == 0 && tempDirect == -1)
             {
                 if(count == 0)
@@ -559,8 +572,7 @@ public class Movement : MonoBehaviour
                 {
                     tempList[count] = route[temp];
                     loop = false;
-                }
-                
+                }  
             }
             else if (temp == route.Length - 1 && tempDirect == 1)
             {
@@ -581,18 +593,17 @@ public class Movement : MonoBehaviour
                 count += 1;
             }
         }
-    
-        
+        //formats the list and returns it
         GameObject[] statsLeft = new GameObject[count + 1] ;
         for(int i = 0; i < count + 1;  i ++)
         {
             statsLeft[i] = tempList[i];
         }
-  
         return statsLeft;
     }
     public GameObject getPreviousStation()
     {
+        //cals the previous station based on direction and route
         if(nextLoc == 0)
         {
             return route[1];
@@ -605,10 +616,10 @@ public class Movement : MonoBehaviour
         {
             return route[nextLoc - direction];
         }
-        
     }
     public GameObject getCurrentloc ()
     {
+        //returns current loc
         return currentLoc; 
     }
 

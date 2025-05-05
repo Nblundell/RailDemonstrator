@@ -12,6 +12,7 @@ public class Switch : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //sets the switch type base on the number of tracks it links to 
         int count = 0;
         if (switchType == "dual")
         {
@@ -38,6 +39,7 @@ public class Switch : MonoBehaviour
     }
     public bool switchCheck(GameObject currentLoc, GameObject nextTrack, GameObject Train)
      {
+        //logic completed on the switch type
         if (switchType == "dual")
         {
             if(Train.GetComponent<Movement>().getNextStation() == connection[0] || Train.GetComponent<Movement>().getNextStation() == connection[1] && Train.GetComponent<Movement>().getPreviousStation() == connection[0] || Train.GetComponent<Movement>().getPreviousStation() == connection[1])
@@ -60,7 +62,6 @@ public class Switch : MonoBehaviour
             }
         }
      }
-
     private bool setConnection(GameObject connectionItem, GameObject dest)
     { 
         if(!broken)

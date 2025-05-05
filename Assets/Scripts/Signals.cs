@@ -27,6 +27,7 @@ public class Signals : MonoBehaviour
         if(changeable)
         {
             colour = newColour;
+            //changes sprite base on colour
             switch (colour)
             {
                 case "Red": currentSprite = spriteArray[0]; break;
@@ -34,7 +35,6 @@ public class Signals : MonoBehaviour
             }
             gameObject.GetComponent<SpriteRenderer>().sprite = currentSprite;
         }
-        
            
     }
     public GameObject getTrack()
@@ -47,6 +47,7 @@ public class Signals : MonoBehaviour
     }
     public void joinedTrack()
     {
+        //sets signals to red as a train joins
         if(changeable)
         {
             currentSprite = spriteArray[0];
@@ -54,18 +55,17 @@ public class Signals : MonoBehaviour
             gameObject.GetComponent<SpriteRenderer>().sprite = currentSprite;
             changeable = false;
         }
-        
-        
         StartCoroutine(Wait());
-
     }
     public void breakSignal()
     {
+        //makes the signal unable to be changes
         this.transform.tag = "Broken";
         changeable = false;
     }
     public void changeState()
     {
+        //changes the state of the signal based on its current state
         if(this.transform.tag != "Broken")
         {
             this.transform.tag = "Broken";
